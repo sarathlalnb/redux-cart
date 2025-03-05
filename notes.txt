@@ -1,0 +1,48 @@
+------------Redux- State Management Library--------
+
+1) It is a JS library for predictable and maintainable 
+global state management
+
+2) It Consists of two libraries:-
+        1) React-Redux :- Official React bindings for Redux
+        2) Redux-Toolkit :- The official, opinionated, batteries-included toolset for efficient Redux development
+
+3) Important Redux APIs:-
+
+    1) configureStore(): used to create store.create a js file and call configureStore method
+    2)To provide store to react app, use Provider component and pass our store to its property 'store'
+
+
+
+--------------Redux-------------
+
+Redux is a state management library that helps manage application state.
+
+
+1) React-Redux is an official binding library for using redux with react
+
+2) Redux Toolkit(RTK) :- is the official,recommended way to write redux logic.It simplifies store configuration, reducers and actions
+
+
+        1)configureStore:-  Redux toolkit provides configureStore() to simplify the store setup,it is used to create store.create a js file and call configureStore method
+
+        2) reducer in configureStore:-It is a function that manages state transistions in Redux. It listens to actions and updated the store  accordingly
+
+        3)Create slice:-
+                slice is a collection of redux logic for a specific feature.
+                it contains 3 items:-
+                        1) name:- Identifier for Slice
+                        2) initialState :- Initial value of the state
+                        3) reducers :- Functions that define to change the state
+
+        4)Provider :-
+                To make the redux store accessinle in a react application,we should wrap the app component with the Provider component from react-redux,and pass our store to its property 'store'
+        
+        5)useSelector :- useSelector is a react-redux Hook used to access state from the redux store.
+
+        6)useDispatch :- useDispatch is a react-redux hook that allows you to send actions to the redux store.
+
+        7) createAsyncThunk :- A function that accepts a Redux action type string and a callback function that should return a promise. It generates promise lifecycle action types based on the action type prefix that you pass in, and returns a thunk action creator that will run the promise callback and dispatch the lifecycle actions based on the returned promise.
+
+        //used to call api's in redux, it returns a promise :- pending,resolved,rejected
+        
