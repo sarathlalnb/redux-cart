@@ -26,7 +26,7 @@ Redux is a state management library that helps manage application state.
 
         1)configureStore:-  Redux toolkit provides configureStore() to simplify the store setup,it is used to create store.create a js file and call configureStore method
 
-        2) reducer in configureStore:-It is a function that manages state transistions in Redux. It listens to actions and updated the store  accordingly
+        2) reducer in configureStore:-It is a function that manages state transistions in Redux. It listens to actions and updates the store  accordingly
 
         3)Create slice:-
                 slice is a collection of redux logic for a specific feature.
@@ -36,7 +36,7 @@ Redux is a state management library that helps manage application state.
                         3) reducers :- Functions that define to change the state
 
         4)Provider :-
-                To make the redux store accessinle in a react application,we should wrap the app component with the Provider component from react-redux,and pass our store to its property 'store'
+                To make the redux store accessible in a react application,we should wrap the app component with the Provider component from react-redux,and pass our store to its property 'store'
         
         5)useSelector :- useSelector is a react-redux Hook used to access state from the redux store.
 
