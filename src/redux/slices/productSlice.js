@@ -12,19 +12,34 @@ export const fetchAllProducts = createAsyncThunk(
 
 const productSlice = createSlice({
   name: "products",
-  initialState: { allProducts: [], loading: false, error: "" },
-  reducers: {},
+  initialState: {
+    allProducts: [],
+    dummyAllProducts: [],
+    loading: false,
+    error: "",
+  },
+  reducers: {
+    searchProducts: (state, valueFromHeader) => {
+      state.allProducts = state.dummyAllProducts.filter((product) =>
+        product.title.toLowerCase().includes(valueFromHeader.payload)
+      );
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchAllProducts.fulfilled, (state, apiResult) => {
       (state.allProducts = apiResult.payload),
-        (state.loading = false),
+        ((state.dummyAllProducts = apiResult.payload), (state.loading = false)),
         (state.error = "");
     });
     builder.addCase(fetchAllProducts.pending, (state, apiResult) => {
-      (state.allProducts = []), (state.loading = true), (state.error = "");
+      (state.allProducts = []),
+        (state.dummyAllProducts = []),
+        (state.loading = true),
+        (state.error = "");
     });
     builder.addCase(fetchAllProducts.rejected, (state, apiResult) => {
       (state.allProducts = []),
+        (state.dummyAllProducts = []),
         (state.loading = false),
         (state.error = "API Calling Failed, Please try again");
     });
@@ -32,4 +47,6 @@ const productSlice = createSlice({
 });
 
 
-export default productSlice.reducer
+
+export const { searchProducts } = productSlice.actions; 
+export default productSlice.reducer;

@@ -1,7 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../components/Header";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProductById } from "../redux/slices/singleProductSlice";
 
 const View = () => {
+  let {id} = useParams()
+  console.log(id);
+  
+  const disp = useDispatch()
+
+  const { product } = useSelector(
+    (state) => state.singleProductReducer
+  );
+
+  console.log(product);
+  
+
+  useEffect(()=>{
+    disp(fetchProductById(id))
+  },[])
+
+
   return (
     <>
       <Header />

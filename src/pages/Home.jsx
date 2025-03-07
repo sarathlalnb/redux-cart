@@ -18,7 +18,7 @@ const Home = () => {
   }, []);
   return (
     <>
-      <Header />
+      <Header fromHomeComponent={true} />
       <div style={{ paddingTop: "80px" }} className="ms-5 ">
         {loading ? (
           <div className="flex justify-center">
