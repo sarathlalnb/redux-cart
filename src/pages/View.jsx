@@ -1,70 +1,107 @@
 import React, { useEffect } from "react";
 import Header from "../components/Header";
+import { fetchProductById } from "../redux/slices/singleProductSlice";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProductById } from "../redux/slices/singleProductSlice";
+import { addToWhishList } from "../redux/slices/whishlistSlice";
+import { addToCart } from "../redux/slices/cartSlice";
 
 const View = () => {
-  let {id} = useParams()
-  console.log(id);
-  
-  const disp = useDispatch()
+  const { product } = useSelector((state) => state.singleProductReducer);
 
-  const { product } = useSelector(
-    (state) => state.singleProductReducer
-  );
+  const whishlistState = useSelector((state) => state.whishListReducer);
 
-  console.log(product);
-  
+  const cartData = useSelector((state)=>state.cartReducer)
 
-  useEffect(()=>{
-    disp(fetchProductById(id))
-  },[])
+  let { id } = useParams();
+  const disp = useDispatch();
+  useEffect(() => {
+    disp(fetchProductById(id));
+  }, []);
 
+  const onAddtoWhishlist = (product) => {
+    const existingProduct = whishlistState.find((val) => val.id == product.id);
+    if (existingProduct) {
+      alert("Product Already Added to Whishlist");
+    } else {
+      disp(addToWhishList(product));
+    }
+  };
+
+  const onCartClick =(product)=>{
+    let existingProduct = cartData.find((val)=>val.id==product.id)
+    disp(addToCart(product))
+    if(existingProduct){
+      alert("Product quantity is incrementing in your cart!!!")
+    }else{
+      alert("Product Successfully Added to CART")
+    }
+  }
 
   return (
     <>
       <Header />
-      <div className="grid grid-cols-2" style={{ paddingTop: "80px" }}>
-        <div className=" ">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 px-10 md:px-20 pt-20">
+        {/* Left Section: Product Image & Buttons */}
+        <div className="flex flex-col items-center">
           <img
-          width={'500px'}
-            src="https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/1.png"
-            alt=""
+            className="w-[20rem] md:w-[25rem] rounded-lg shadow-lg"
+            src={product?.thumbnail}
+            alt="Essence Mascara Lash Princess"
           />
-          <div className="flex justify-around">
-            <button className="bg-green-600 border rounder p-1">
-              Add to Whishlist
+          <div className="flex gap-5 mt-5">
+            <button
+              onClick={() => onAddtoWhishlist(product)}
+              className="bg-violet-700 hover:bg-violet-900 transition px-5 py-3 rounded-lg text-white font-semibold shadow"
+            >
+              ❤️ Add to Wishlist
             </button>
-            <button className="bg-blue-600 border rounder p-1">
-              Add to cart
+            <button onClick={()=>onCartClick(product)} className="bg-green-700 hover:bg-green-900 transition px-5 py-3 rounded-lg text-white font-semibold shadow">
+              🛒 Add to Cart
             </button>
           </div>
         </div>
-        <div className=" ">
-        <div className="mt-10">
-          <h6>PID:1</h6>
-          <h1 className="font-bold  ">Essence Mascara Lash Princess</h1>
-          <p className="text-red-950 font-bold text-2xl">$9.99</p>
-          <h6>Brand : Essense</h6>
-          <h6>Category : beauty</h6>
-          <p className="w-[80%]">
-            <span className="font-bold text-xl">Description : </span>Lorem ipsum dolor sit amet, consectetur
-            adipisicing elit. Laborum sunt in omnis ea quaerat laboriosam
-            itaque, explicabo vero dolor! Itaque cupiditate nesciunt perferendis
-            unde, quod quibusdam aliquam iste quae sapiente dignissimos maiores
-            placeat. Harum esse earum in dignissimos fugit ipsum, fugiat veniam
-            ratione et? Nihil vel minus blanditiis animi iure.
+
+        {/* Right Section: Product Details */}
+        <div className="mt-5 md:mt-0">
+          <p className="text-gray-600">PID: {id}</p>
+          <h1 className="font-bold text-2xl md:text-3xl text-gray-800">
+            {product?.title}
+          </h1>
+          <p className="text-red-600 font-bold text-xl mt-2">$9.99</p>
+          <p className="text-gray-700 mt-1">
+            <span className="font-semibold">Brand:</span> {product?.brand}
+          </p>
+          <p className="text-gray-700">
+            <span className="font-semibold">Category:</span> {product?.category}
           </p>
 
-          <h1>Client Reviews</h1>
+          {/* Description Section */}
+          <p className="mt-4 text-gray-700 leading-relaxed">
+            <span className="font-semibold">Description:</span>{" "}
+            {product.description}
+          </p>
 
-          <div className="border rounded p-3 shadow mt-2 w-[80%]">
-            <h1>John Doe: Very unhappy with my purchase</h1>
-            <h1>Rating :2</h1>
-          </div>
+          {/* Client Reviews Section */}
+          <h2 className="mt-6 text-lg font-semibold text-gray-800">
+            Client Reviews
+          </h2>
+
+          {product.reviews?.map((obj) => (
+            <div
+              key={product.id}
+              className="border rounded-lg p-4 shadow-md mt-2 bg-gray-100 w-[90%]"
+            >
+              <h3 className="font-semibold text-gray-800">
+                {obj.reviewerName}
+              </h3>
+              <p className="text-gray-600 text-sm italic">{obj.comment}</p>
+              <p className="text-yellow-600 font-semibold mt-1">
+                ⭐ Rating: {obj.rating}
+              </p>
+            </div>
+          ))}
         </div>
-      </div>
       </div>
     </>
   );
