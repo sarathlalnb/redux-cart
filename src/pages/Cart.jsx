@@ -1,17 +1,35 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart,decrementItem,removeItem,emptyCart} from "../redux/slices/cartSlice";
+import { Link, useNavigate } from "react-router-dom";
+
 
 const Cart = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
   const [totalPriceVal, setotalPriceVal] = useState(0);
 
   const cartData = useSelector((state) => state.cartReducer);
   useEffect(() => {
-    setotalPriceVal(cartData?.map((item) => item.totalPrice)?.reduce((a, b) => a + b));
-  },[cartData]);
+    setotalPriceVal(
+      cartData?.map((item) => item.totalPrice)?.reduce((a, b) => a + b, 0)
+    );
+  }, [cartData]);
 
-  console.log(totalPriceVal);
-  
+  const decrementBtnClick =(product)=>{
+    if(product.quantity>1){
+      dispatch(decrementItem(product))
+    }else{
+      // remove item
+    }
+  }
+
+  const onCheckoutClick =()=>{
+    dispatch(emptyCart())
+    alert("Successfully Ordered.....Thank you for purchasing with us")
+    navigate('/')
+  }
 
   return (
     <>
@@ -43,7 +61,7 @@ const Cart = () => {
                         </td>
                         <td>
                           <div className="flex">
-                            <button className="font-bold">-</button>
+                            <button onClick={()=>decrementBtnClick(val)} className="font-bold">-</button>
                             <input
                               type="text"
                               style={{ width: "40px" }}
@@ -51,12 +69,17 @@ const Cart = () => {
                               value={val.quantity}
                               readOnly
                             />
-                            <button className="font-bold ">+</button>
+                            <button
+                              onClick={() => dispatch(addToCart(val))}
+                              className="font-bold "
+                            >
+                              +
+                            </button>
                           </div>
                         </td>
                         <td>{val.totalPrice}</td>
                         <td>
-                          <button>
+                          <button onClick={()=>dispatch(removeItem(val.id))}>
                             <i className="fa-solid fa-trash text-red-600"></i>
                           </button>
                         </td>
@@ -73,20 +96,21 @@ const Cart = () => {
                 </tbody>
               </table>
               <div className="float-right">
-                <button className="bg-red-600 text-white font-bold rounded p-1 me-5">
+                <button onClick={()=>dispatch(emptyCart())} className="bg-red-600 text-white font-bold rounded p-1 me-5">
                   Empty Cart
                 </button>
-                <button className="bg-blue-600 text-white font-bold rounded p-1 me-5">
+                <Link to={'/'} className="bg-blue-600 text-white font-bold rounded p-1 me-5">
                   Shop More
-                </button>
+                </Link>
               </div>
             </div>
             <div className="border rounded shadow p-5">
               <h1 className="text-xl font-bold">
-                Total Amount : <span className="text-red-700">{totalPriceVal}</span>
+                Total Amount :{" "}
+                <span className="text-red-700">{totalPriceVal}</span>
               </h1>
               <hr />
-              <button className="bg-green-600 rounded p-1 w-full mt-2 text-white font-bold text-xl">
+              <button onClick={onCheckoutClick} className="bg-green-600 rounded p-1 w-full mt-2 text-white font-bold text-xl">
                 Checkout
               </button>
             </div>
